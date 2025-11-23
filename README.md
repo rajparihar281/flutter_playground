@@ -1,39 +1,78 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Flutter Playground ⚡️
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+> **Stop rebuilding. Start tweaking.**
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+A real-time component playground for Flutter. Tweak properties on a web dashboard and see changes instantly on your device—without recompiling or hot reloading.
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+---
 
-## Features
+## 🚀 Why?
+Flutter's hot reload is fast, but tweaking UI values (padding, colors, alignment) still requires:
+1. Changing code
+2. Saving
+3. Waiting for frame update
+4. Repeating x100
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+**Flutter Playground** solves this by creating a live link between your app and a web dashboard.
 
-## Getting started
+## ✨ Features
+* **📱 Live Property Editing:** Tweak padding, colors, and text in real-time.
+* **🖥️ Responsive Grid View:** See Mobile, Tablet, and Desktop layouts side-by-side.
+* **⚡️ Zero-Setup:** Auto-detects your device IP (or works via localhost).
+* **📋 Code Export:** Copy the generated Dart code directly from the dashboard.
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+## 📦 Installation
 
-## Usage
+**Step 1:** Add the dependency to your `pubspec.yaml`:
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+```yaml
+dependencies:
+  flutter_playground:
+    git:
+      url: [https://github.com/YOUR_GITHUB_USERNAME_HERE/flutter_playground.git](https://github.com/YOUR_GITHUB_USERNAME_HERE/flutter_playground.git)
+(Note: Replace YOUR_GITHUB_USERNAME_HERE with your actual GitHub username)
 
-```dart
-const like = 'sample';
-```
+Step 2: Android Permission (Required for local web server) Add this to your android/app/src/main/AndroidManifest.xml (above the <application> tag):
 
-## Additional information
+XML
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+<uses-permission android:name="android.permission.INTERNET"/>
+⚡️ Quick Start
+Wrap any widget you want to inspect with Playground:
+
+Dart
+
+import 'package:flutter/material.dart';
+import 'package:flutter_playground/flutter_playground.dart';
+
+class MyWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Playground(
+      builder: (context, values) {
+        // 1. Get values from the dashboard (with defaults)
+        final double padding = (values['padding'] as num?)?.toDouble() ?? 10.0;
+        
+        return Container(
+          padding: EdgeInsets.all(padding),
+          child: Text("Edit me live!"),
+        );
+      },
+    );
+  }
+}
+Run your app: Check the console logs for the dashboard link:
+
+Plaintext
+
+⚡️ Playground Server running on [http://0.0.0.0:8080](http://0.0.0.0:8080)
+👉 [http://192.168.1.5:8080](http://192.168.1.5:8080)
+🛠 Tech Stack
+Shelf: Lightweight web server running inside the Flutter app.
+
+WebSockets: Real-time bi-directional communication.
+
+HTML/JS: Zero-dependency dashboard (served directly from Dart).
+
+📄 License
+MIT

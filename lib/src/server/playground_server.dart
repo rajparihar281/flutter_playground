@@ -69,6 +69,7 @@ class PlaygroundServer {
   }
 }
 
+
 const String _dashboardHtml = '''
 <!DOCTYPE html>
 <html>
@@ -82,26 +83,22 @@ const String _dashboardHtml = '''
         .section { margin-bottom: 24px; }
         label { display: block; font-weight: 500; margin-bottom: 8px; color: #666; font-size: 14px; }
         
-        /* Range Slider */
+        /* Inputs */
         input[type="range"] { width: 100%; accent-color: #3b82f6; }
         
-        /* Button Group for Layout */
+        /* Buttons */
         .btn-group { display: flex; gap: 10px; }
         button {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            background: white;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            color: #555;
-            transition: all 0.2s;
+            flex: 1; padding: 10px; border: 1px solid #ddd; background: white;
+            border-radius: 6px; cursor: pointer; font-weight: 600; color: #555; transition: all 0.2s;
         }
-        button.active {
-            background: #3b82f6;
-            color: white;
-            border-color: #3b82f6;
+        button.active { background: #3b82f6; color: white; border-color: #3b82f6; }
+
+        /* Code Snippet Box */
+        .code-box {
+            background: #1e1e1e; color: #a9b7c6; font-family: monospace; font-size: 12px;
+            padding: 12px; border-radius: 6px; width: 100%; box-sizing: border-box;
+            border: 1px solid #333; resize: vertical; min-height: 80px;
         }
         
         #status { font-size: 12px; color: #888; margin-top: 20px; text-align: center; }
@@ -113,15 +110,20 @@ const String _dashboardHtml = '''
 
         <div class="section">
             <label>Padding: <span id="valDisplay">10.0</span></label>
-            <input type="range" min="0" max="100" value="10" oninput="sendPadding(this.value)">
+            <input type="range" min="0" max="100" value="10" oninput="updateState('padding', this.value)">
         </div>
 
         <div class="section">
             <label>Preview Mode</label>
             <div class="btn-group">
-                <button id="btnSingle" class="active" onclick="sendLayout('single')">📱 Single</button>
-                <button id="btnGrid" onclick="sendLayout('grid')">🖥️ Grid</button>
+                <button id="btnSingle" class="active" onclick="updateLayout('single')">📱 Single</button>
+                <button id="btnGrid" onclick="updateLayout('grid')">🖥️ Grid</button>
             </div>
+        </div>
+
+        <div class="section">
+            <label>Generated Code</label>
+            <textarea id="codeOutput" class="code-box" readonly></textarea>
         </div>
 
         <div id="status">Connecting...</div>
@@ -130,39 +132,48 @@ const String _dashboardHtml = '''
     <script>
         const ws = new WebSocket('ws://' + window.location.host + '/ws');
         
-        // State
-        let currentLayout = 'single';
+        // Internal State
+        let state = {
+            padding: 10.0,
+            layout: 'single'
+        };
 
         ws.onopen = () => {
-            const status = document.getElementById('status');
-            status.innerText = '🟢 Connected to Device';
-            status.style.color = '#22c55e';
+            document.getElementById('status').innerText = '🟢 Connected';
+            updateCodeSnippet(); // Init code box
         };
 
-        ws.onclose = () => {
-             const status = document.getElementById('status');
-            status.innerText = '🔴 Disconnected';
-            status.style.color = '#ef4444';
-        };
+        function updateState(key, value) {
+            // 1. Update Internal State
+            state[key] = parseFloat(value);
+            
+            // 2. Update UI
+            if(key === 'padding') document.getElementById('valDisplay').innerText = state.padding.toFixed(1);
+            updateCodeSnippet();
 
-        function sendPadding(val) {
-            document.getElementById('valDisplay').innerText = parseFloat(val).toFixed(1);
+            // 3. Send to Flutter
             ws.send(JSON.stringify({ 
                 'type': 'update',
-                'padding': parseFloat(val) 
+                ...state
             }));
         }
 
-        function sendLayout(mode) {
-            // Update UI
+        function updateLayout(mode) {
+            state.layout = mode;
             document.getElementById('btnSingle').className = mode === 'single' ? 'active' : '';
             document.getElementById('btnGrid').className = mode === 'grid' ? 'active' : '';
             
-            // Send Command
             ws.send(JSON.stringify({ 
                 'type': 'layout',
                 'layout': mode 
             }));
+        }
+
+        function updateCodeSnippet() {
+            // Simple logic to generate Dart code based on current state
+            const code = `// Copy to your widget:
+EdgeInsets.all(\${state.padding.toFixed(1)})`;
+            document.getElementById('codeOutput').value = code;
         }
     </script>
 </body>

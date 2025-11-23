@@ -29,8 +29,7 @@ Flutter's hot reload is fast, but tweaking UI values (padding, colors, alignment
 dependencies:
   flutter_playground:
     git:
-      url: [https://github.com/YOUR_GITHUB_USERNAME_HERE/flutter_playground.git](https://github.com/YOUR_GITHUB_USERNAME_HERE/flutter_playground.git)
-(Note: Replace YOUR_GITHUB_USERNAME_HERE with your actual GitHub username)
+      url: [https://github.com/rajparihar281/flutter_playground.git](https://github.com/rajparihar281/flutter_playground.git)
 
 Step 2: Android Permission (Required for local web server) Add this to your android/app/src/main/AndroidManifest.xml (above the <application> tag):
 

@@ -1,3 +1,6 @@
+I cannot generate a downloadable file directly. However, you can copy the complete, corrected content below and save it as a file named `README.md`.
+
+````markdown
 # Flutter Playground ⚡️
 
 > **Stop rebuilding. Start tweaking.**
@@ -30,17 +33,21 @@ dependencies:
   flutter_playground:
     git:
       url: [https://github.com/rajparihar281/flutter_playground.git](https://github.com/rajparihar281/flutter_playground.git)
+````
 
-Step 2: Android Permission (Required for local web server) Add this to your android/app/src/main/AndroidManifest.xml (above the <application> tag):
+**Step 2:** Android Permission (Required for local web server)
 
-XML
+Add this to your `android/app/src/main/AndroidManifest.xml` (above the `<application>` tag):
 
+```xml
 <uses-permission android:name="android.permission.INTERNET"/>
-⚡️ Quick Start
+```
+
+## ⚡️ Quick Start
+
 Wrap any widget you want to inspect with Playground:
 
-Dart
-
+```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_playground/flutter_playground.dart';
 
@@ -60,18 +67,24 @@ class MyWidget extends StatelessWidget {
     );
   }
 }
-Run your app: Check the console logs for the dashboard link:
+```
 
-Plaintext
+**Run your app:** Check the console logs for the dashboard link:
 
+```plaintext
 ⚡️ Playground Server running on [http://0.0.0.0:8080](http://0.0.0.0:8080)
 👉 [http://192.168.1.5:8080](http://192.168.1.5:8080)
-🛠 Tech Stack
-Shelf: Lightweight web server running inside the Flutter app.
+```
 
-WebSockets: Real-time bi-directional communication.
+## 🛠 Tech Stack
 
-HTML/JS: Zero-dependency dashboard (served directly from Dart).
+  * **Shelf:** Lightweight web server running inside the Flutter app.
+  * **WebSockets:** Real-time bi-directional communication.
+  * **HTML/JS:** Zero-dependency dashboard (served directly from Dart).
 
-📄 License
+## 📄 License
+
 MIT
+
+```
+```

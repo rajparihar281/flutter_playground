@@ -3,7 +3,8 @@
 
 > **Stop rebuilding. Start tweaking.**
 
-A real-time component playground for Flutter. Tweak properties on a web dashboard and see changes instantly on your device—without recompiling or hot reloading.
+A real-time component playground for Flutter. Tweak properties on a web dashboard and see changes instantly
+on your device—without recompiling or hot reloading.
 
 ---
 

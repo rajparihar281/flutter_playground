@@ -5,12 +5,12 @@ import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-
+import 'package:logger/logger.dart';
 class PlaygroundServer {
   HttpServer? _server;
   final StreamController<Map<String, dynamic>> _updateController =
       StreamController.broadcast();
-
+  final logger = Logger();
   Stream<Map<String, dynamic>> get updateStream => _updateController.stream;
 
   Future<void> start() async {
@@ -19,8 +19,7 @@ class PlaygroundServer {
       String? protocol,
     ) {
       webSocket.stream.listen((message) {
-        // ignore: avoid_print
-        print('Playground: Received update: $message');
+        logger.i('Playground: Received update: $message');
 
         try {
           final data = jsonDecode(message);
@@ -28,8 +27,7 @@ class PlaygroundServer {
             _updateController.add(data);
           }
         } catch (e) {
-          // ignore: avoid_print
-          print('Error parsing JSON: $e');
+          logger.e('Error parsing JSON: $e');
         }
       });
     });
@@ -48,23 +46,18 @@ class PlaygroundServer {
 
     _server = await shelf_io.serve(handler, InternetAddress.anyIPv4, 8080);
 
-    // ignore: avoid_print
-    print('-------------------------------------------------------');
-    // ignore: avoid_print
-    print(
+    logger.i('-------------------------------------------------------');
+    logger.i(
       '⚡️ Playground Server running on http://${_server!.address.host}:${_server!.port}',
     );
-    // ignore: avoid_print
-    print('⚡️ Access from laptop via: http://<PHONE_IP_ADDRESS>:8080');
-    // ignore: avoid_print
-    print('-------------------------------------------------------');
+    logger.i('⚡️ Access from laptop via: http://<PHONE_IP_ADDRESS>:8080');
+    logger.i('-------------------------------------------------------');
   }
 
   Future<void> stop() async {
     await _server?.close();
     await _updateController.close();
-    // ignore: avoid_print
-    print('Playground Server stopped.');
+    logger.w('Playground Server stopped.');
   }
 }
 

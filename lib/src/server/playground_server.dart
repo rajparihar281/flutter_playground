@@ -14,7 +14,6 @@ class PlaygroundServer {
   Stream<Map<String, dynamic>> get updateStream => _updateController.stream;
 
   Future<void> start() async {
-    // FIX: Added second argument 'String? protocol' to match new package version
     var wsHandler = webSocketHandler((
       WebSocketChannel webSocket,
       String? protocol,
